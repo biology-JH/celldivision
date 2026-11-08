@@ -180,6 +180,49 @@ const plenaryQuestions = [
   mcq("Why can stem cells be useful in growth and tissue repair?", ["They divide by mitosis and can produce cells that specialise", "They halve chromosome number to make gametes", "They destroy damaged chromosomes", "They only form a fertilised egg"], "Stem cells divide by mitosis; daughter cells can specialise for specific functions.")
 ];
 
+const keyTermGroups = [
+  {
+    title: "Division & copying",
+    terms: [
+      ["Mitosis", "有絲分裂"],
+      ["Meiosis", "減數分裂"],
+      ["Chromosome", "染色體"],
+      ["DNA", "脫氧核糖核酸"],
+      ["Chromosome replication", "染色體複製"]
+    ]
+  },
+  {
+    title: "Chromosomes & number",
+    terms: [
+      ["Sister chromatids", "姊妹染色單體"],
+      ["Centromere", "著絲點"],
+      ["Diploid (2n)", "二倍體（2n）"],
+      ["Haploid (n)", "單倍體（n）"],
+      ["Reduction division", "染色體數目減半的分裂"]
+    ]
+  },
+  {
+    title: "Stem cells & asexual reproduction",
+    terms: [
+      ["Stem cell", "幹細胞"],
+      ["Unspecialised cell", "未分化細胞"],
+      ["Differentiation", "細胞分化"],
+      ["Asexual reproduction", "無性生殖"],
+      ["Clone", "克隆個體"]
+    ]
+  },
+  {
+    title: "Gametes & variation",
+    terms: [
+      ["Gamete", "配子"],
+      ["Anther", "花藥"],
+      ["Ovule", "胚珠"],
+      ["Fertilisation", "受精"],
+      ["Genetic variation", "遺傳變異"]
+    ]
+  }
+];
+
 const pointNav = document.getElementById("point-nav");
 const mitosisMount = document.getElementById("mitosis-points");
 const meiosisMount = document.getElementById("meiosis-points");
@@ -204,6 +247,10 @@ function renderCompare(comparison) {
 function renderCycle(cycle) {
   if (!cycle?.length) return "";
   return `<div class="cycle-block"><h4>The life cycle at a glance</h4><div class="cycle-flow">${cycle.map((step, index) => `${index ? '<span class="cycle-arrow" aria-hidden="true">→</span>' : ""}<div class="cycle-step">${step}</div>`).join("")}</div></div>`;
+}
+
+function renderKeyTermGroups(groups) {
+  return groups.map((group) => `<article class="keyterm-card"><h3>${group.title}</h3><dl class="keyterm-list">${group.terms.map(([english, chinese]) => `<div class="keyterm-pair"><dt>${english}</dt><dd lang="zh-Hant">${chinese}</dd></div>`).join("")}</dl></article>`).join("");
 }
 
 function shuffleChoices(question) {
@@ -251,6 +298,8 @@ function renderLesson(lesson, index) {
 }
 
 lessons.forEach(renderLesson);
+
+document.getElementById("keyterms-grid").innerHTML = renderKeyTermGroups(keyTermGroups);
 
 document.getElementById("starter-question").innerHTML = renderQuestionGroup("starter-check", "Make your prediction", "Choose A–D before you begin.", starterQuestions, "starter");
 document.getElementById("mitosis-quiz").innerHTML = renderQuestionGroup("mitosis-section-quiz", sectionQuizzes.mitosis.title, `${sectionQuizzes.mitosis.label} · Choose A–D.`, sectionQuizzes.mitosis.questions, "section");
