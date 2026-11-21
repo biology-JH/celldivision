@@ -1,5 +1,32 @@
 const mcq = (prompt, options, explanation, correct = 0) => ({ prompt, options, explanation, correct });
 
+const lessonVideos = {
+  mitosis: {
+    id: "e22Hrqh6Ugo",
+    title: "Mitosis and the cell cycle | GCSE & IGCSE Biology | GCSE-ready",
+    publisher: "GCSE-ready",
+    channelUrl: "https://www.youtube.com/@iGCSE-ready",
+    watchUrl: "https://www.youtube.com/watch?v=e22Hrqh6Ugo",
+    note: "Optional reinforcement. Detailed stages of mitosis are not required by this syllabus.",
+    prompts: [
+      "A cut in the skin is healing. Explain how mitosis replaces damaged cells while keeping the chromosome number unchanged.",
+      "A stem cell divides by mitosis. Explain what mitosis contributes and what must happen for a daughter cell to gain a specialised function."
+    ]
+  },
+  meiosis: {
+    id: "GHIlA76-h3c",
+    title: "Cell Division: Meiosis vs. Mitosis",
+    publisher: "Nucleus Medical Media",
+    channelUrl: "https://www.youtube.com/@nucleusmedicalmedia",
+    watchUrl: "https://www.youtube.com/watch?v=GHIlA76-h3c",
+    note: "Optional reinforcement. Focus on gamete production, halved chromosome number and genetic differences; detailed stages are not required by this syllabus.",
+    prompts: [
+      "A human body cell has 46 chromosomes. Explain why meiosis makes gametes with 23 and how fertilisation restores 46.",
+      "Meiosis produces genetically different gametes. Explain one reason this matters to a population."
+    ]
+  }
+};
+
 const lessons = [
   {
     code: "17.2.1",
@@ -253,6 +280,20 @@ function renderKeyTermGroups(groups) {
   return groups.map((group) => `<article class="keyterm-card"><h3>${group.title}</h3><dl class="keyterm-list">${group.terms.map(([english, chinese]) => `<div class="keyterm-pair"><dt>${english}</dt><dd lang="zh-Hant">${chinese}</dd></div>`).join("")}</dl></article>`).join("");
 }
 
+function renderOpenEndedQuestions(sectionId, prompts) {
+  const questions = prompts.map((prompt, index) => {
+    const responseId = `${sectionId}-response-${index + 1}`;
+    return `<div class="open-ended-question"><label for="${responseId}">${index + 1}. ${prompt}</label><textarea id="${responseId}" name="${responseId}" rows="4" placeholder="Type your explanation here."></textarea></div>`;
+  }).join("");
+  return `<section class="open-ended-set" aria-labelledby="${sectionId}-open-title"><h4 id="${sectionId}-open-title">Explain in your own words</h4><p class="open-ended-instructions">Write your ideas below. Open responses are not automatically marked.</p><div class="open-ended-list">${questions}</div></section>`;
+}
+
+function renderLessonVideo(video, sectionId) {
+  const videoTitleId = `${sectionId}-video-title`;
+  const iframeTitle = `${video.title}, by ${video.publisher}`;
+  return `<article class="lesson-video-card" aria-labelledby="${videoTitleId}"><header class="lesson-video-header"><p class="eyebrow">WATCH &amp; EXPLAIN</p><h3 id="${videoTitleId}">${video.title}</h3><p class="video-byline">Video by <a href="${video.channelUrl}" target="_blank" rel="noreferrer">${video.publisher}</a> · <a href="${video.watchUrl}" target="_blank" rel="noreferrer">Watch on YouTube</a></p></header><div class="video-frame"><iframe src="https://www.youtube.com/embed/${video.id}?rel=0" title="${iframeTitle}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><p class="video-syllabus-note">${video.note}</p>${renderOpenEndedQuestions(sectionId, video.prompts)}</article>`;
+}
+
 function shuffleChoices(question) {
   const choices = question.options.map((text, index) => ({ text, correct: index === question.correct }));
   for (let index = choices.length - 1; index > 0; index -= 1) {
@@ -302,6 +343,8 @@ lessons.forEach(renderLesson);
 document.getElementById("keyterms-grid").innerHTML = renderKeyTermGroups(keyTermGroups);
 
 document.getElementById("starter-question").innerHTML = renderQuestionGroup("starter-check", "Make your prediction", "Choose A–D before you begin.", starterQuestions, "starter");
+document.getElementById("mitosis-video").innerHTML = renderLessonVideo(lessonVideos.mitosis, "mitosis");
+document.getElementById("meiosis-video").innerHTML = renderLessonVideo(lessonVideos.meiosis, "meiosis");
 document.getElementById("mitosis-quiz").innerHTML = renderQuestionGroup("mitosis-section-quiz", sectionQuizzes.mitosis.title, `${sectionQuizzes.mitosis.label} · Choose A–D.`, sectionQuizzes.mitosis.questions, "section");
 document.getElementById("meiosis-quiz").innerHTML = renderQuestionGroup("meiosis-section-quiz", sectionQuizzes.meiosis.title, `${sectionQuizzes.meiosis.label} · Choose A–D.`, sectionQuizzes.meiosis.questions, "section");
 document.getElementById("plenary-questions").innerHTML = renderQuestionGroup("plenary-check", "Three final questions", "Choose A–D to check your understanding.", plenaryQuestions, "plenary");
